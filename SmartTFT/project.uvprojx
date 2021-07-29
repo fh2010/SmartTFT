@@ -305,8 +305,8 @@
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x10000000</StartAddress>
+                <Size>0x10000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
             <RvctStartVector></RvctStartVector>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\chip\stm32f407_dk\base;.\chip\stm32f407_dk\lib\inc;.\chip\stm32f407_dk</IncludePath>
+              <IncludePath>.\chip\stm32f407_dk\base;.\chip\stm32f407_dk\lib\inc;.\chip\stm32f407_dk;.\external\segger-rtt;.\chip\stm32f407_dk\driver\lcd;.\chip\stm32f407_dk\driver\systick;.\config;.\device\ITL9341</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -404,6 +404,28 @@
         </Group>
         <Group>
           <GroupName>external/segger_rtt</GroupName>
+          <Files>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\segger-rtt\SEGGER_RTT.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\external\segger-rtt\SEGGER_RTT_printf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>device/ITL9341</GroupName>
+          <Files>
+            <File>
+              <FileName>device_itl9341_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\device\ITL9341\device_itl9341_driver.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>chip/base</GroupName>
@@ -473,10 +495,27 @@
               <FileType>1</FileType>
               <FilePath>.\chip\stm32f407_dk\lib\src\stm32f4xx_usart.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_fsmc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\chip\stm32f407_dk\lib\src\stm32f4xx_fsmc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>chip/driver</GroupName>
+          <Files>
+            <File>
+              <FileName>chip_driver_lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\chip\stm32f407_dk\driver\lcd\chip_driver_lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>chip_driver_systick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\chip\stm32f407_dk\driver\systick\chip_driver_systick.c</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>
