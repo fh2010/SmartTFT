@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 static device_itl9341_msg_t device_itl9341_msg;
+static device_itl9341_color_msg_t device_itl9341_color_msg;
 
 static uint8_t device_itl9341_get_display_dir(void)
 {
@@ -13,6 +14,26 @@ static uint8_t device_itl9341_get_display_dir(void)
 static uint16_t device_itl9341_get_lcd_id(void)
 {
 	return device_itl9341_msg.lcd_id;
+}
+
+static uint16_t device_itl9341_get_lcd_backcolor(void)
+{
+	return device_itl9341_color_msg.lcd_back_color;
+}
+
+void device_itl9341_set_lcd_backcolor(uint16_t backcolor)
+{
+	device_itl9341_color_msg.lcd_back_color = backcolor;
+}
+
+static uint16_t device_itl9341_get_lcd_textcolor(void)
+{
+	return device_itl9341_color_msg.lcd_text_color;
+}
+
+void device_itl9341_set_lcd_textcolor(uint16_t textcolor)
+{
+	device_itl9341_color_msg.lcd_text_color = textcolor;
 }
 
 void device_itl9341_display_onff(bool onoroff)
@@ -33,12 +54,12 @@ void device_itl9341_set_show_window(uint16_t x0, uint16_t y0, uint16_t x1, uint1
 	{
 		return;
 	}
-	chip_driver_lcd_set_cmd(DEVICE_ITL9341_SET_X);	
+	chip_driver_lcd_set_cmd(device_itl9341_msg.setx_cmd);	
 	chip_driver_lcd_set_data(x0>>8);
 	chip_driver_lcd_set_data(x0&0XFF);
 	chip_driver_lcd_set_data((x1-1)>>8);
 	chip_driver_lcd_set_data((x1-1)&0XFF);
-	chip_driver_lcd_set_cmd(DEVICE_ITL9341_SET_Y);
+	chip_driver_lcd_set_cmd(device_itl9341_msg.sety_cmd);
 	chip_driver_lcd_set_data(y0>>8);
 	chip_driver_lcd_set_data(y0&0XFF);
 	chip_driver_lcd_set_data((y1-1)>>8);
@@ -81,45 +102,57 @@ void device_itl9341_set_scan_dir(DEVICE_ITL9341_SCAN_DIR dir)
 		scan_data|=0X08;
 	}		
 	chip_driver_lcd_write_reg(scan_reg,scan_data);
-	device_itl9341_set_show_window(0,0,device_itl9341_msg.lcd_width,device_itl9341_msg.lcd_height);
+	device_itl9341_set_show_window(0,0,device_itl9341_msg.lcd_hor,device_itl9341_msg.lcd_ver);
 }
 
-void device_itl9341_set_show_dir(DEVICE_ITL9341_DISPLAY_DIR dis_dir)
+void device_itl9341_set_show_dir(uint8_t sacn_dir)
 {
-	if(dis_dir == VERTICAL_SCREEN)
+	uint8_t tmp = sacn_dir%2;
+    if(sacn_dir>7)
+    {
+        return;
+    }
+	device_itl9341_msg.setx_cmd = DEVICE_ITL9341_SET_X;
+	device_itl9341_msg.sety_cmd = DEVICE_ITL9341_SET_Y;
+	device_itl9341_msg.gram_cmd = DEVICE_ITL9341_WRITE_GRAM;
+	device_itl9341_msg.scan_mode = sacn_dir;
+	device_itl9341_msg.dis_dir = (DEVICE_ITL9341_DISPLAY_DIR)tmp;
+	if(tmp == 0)
 	{
-		device_itl9341_msg.dis_dir = VERTICAL_SCREEN;
-		device_itl9341_msg.lcd_width = LCD_WIDHT;
-		device_itl9341_msg.lcd_height = LCD_HEIGHT;
+		device_itl9341_msg.lcd_hor = LCD_HEIGHT;
+		device_itl9341_msg.lcd_ver = LCD_WIDHT;
 		
 	}
-	else if(dis_dir == HORIZONTAL_SCREEN)
+	else if(tmp == 1)
 	{
-		device_itl9341_msg.dis_dir = HORIZONTAL_SCREEN;
-		device_itl9341_msg.lcd_width = LCD_HEIGHT;
-		device_itl9341_msg.lcd_height = LCD_WIDHT;
+		device_itl9341_msg.lcd_hor = LCD_WIDHT;
+		device_itl9341_msg.lcd_ver = LCD_HEIGHT;
 	}
-	device_itl9341_set_scan_dir(L2R_U2D);
+	device_itl9341_set_scan_dir((DEVICE_ITL9341_SCAN_DIR)sacn_dir);
 }
 
 void device_itl9341_setcursor(uint16_t x_addr, uint16_t y_addr)
 {
 	if(device_itl9341_get_lcd_id() == DEVICE_ITL9341_ID)
 	{
-		chip_driver_lcd_set_cmd(DEVICE_ITL9341_SET_X);	
-		chip_driver_lcd_set_data(x_addr>>8);
-		chip_driver_lcd_set_data(x_addr&0XFF);
-		chip_driver_lcd_set_cmd(DEVICE_ITL9341_SET_Y);
-		chip_driver_lcd_set_data(y_addr>>8);
-		chip_driver_lcd_set_data(y_addr&0XFF);
+		chip_driver_lcd_set_cmd(device_itl9341_msg.setx_cmd);	
+		chip_driver_lcd_write_data(x_addr>>8);
+		chip_driver_lcd_write_data(x_addr&0XFF);
+		chip_driver_lcd_write_data((device_itl9341_msg.lcd_hor-1)>>8);
+		chip_driver_lcd_write_data((device_itl9341_msg.lcd_hor-1)&0XFF);
+		chip_driver_lcd_set_cmd(device_itl9341_msg.sety_cmd);
+		chip_driver_lcd_write_data(y_addr>>8);
+		chip_driver_lcd_write_data(y_addr&0XFF);
+		chip_driver_lcd_write_data((device_itl9341_msg.lcd_ver-1)>>8);
+		chip_driver_lcd_write_data((device_itl9341_msg.lcd_ver-1)&0XFF);
 	}
 }
 
 void device_itl9341_drawpoint(uint16_t x_addr, uint16_t y_addr)
 {
 	device_itl9341_setcursor(x_addr,y_addr);
-	chip_driver_lcd_set_cmd(DEVICE_ITL9341_WRITE_GRAM);
-	chip_driver_lcd_set_data(device_itl9341_msg.lcd_brush_color);
+	chip_driver_lcd_write_cmd(device_itl9341_msg.gram_cmd);
+	chip_driver_lcd_write_data(device_itl9341_color_msg.lcd_text_color);
 }
 
 void device_itl9341_set_back_light(uint8_t back_light)
@@ -135,22 +168,43 @@ void device_itl9341_set_back_light(uint8_t back_light)
 
 void device_itl9341_show_clear(uint16_t color)
 {
+    uint32_t totalpoint = device_itl9341_msg.lcd_hor * device_itl9341_msg.lcd_ver;
+	device_itl9341_color_msg.lcd_back_color = color;
 	device_itl9341_setcursor(0,0);
-	chip_driver_lcd_set_cmd(DEVICE_ITL9341_WRITE_GRAM);
-	for(uint32_t i=0;i<(device_itl9341_msg.lcd_width*device_itl9341_msg.lcd_height);i++)
+	chip_driver_lcd_write_cmd(device_itl9341_msg.gram_cmd);
+	for(uint32_t i=0;i<totalpoint;i++)
 	{
-		chip_driver_lcd_set_data(color);
+		chip_driver_lcd_write_data(device_itl9341_color_msg.lcd_back_color);
 	}
+}
+
+void device_itl9341_fill_color(uint16_t sx_addr, uint16_t sy_addr,uint16_t ex_addr, uint16_t ey_addr,uint16_t *color)
+{
+    uint16_t i,j; 
+    uint16_t height,width;     
+    width = ex_addr - sx_addr + 1;          
+    height = ey_addr - sy_addr + 1; 
+    for(i=0; i<height; i++)   
+    {   
+        device_itl9341_setcursor(sx_addr, sy_addr+i);     
+        chip_driver_lcd_write_cmd(device_itl9341_msg.gram_cmd);    
+        for(j=0; j<width; j++)
+        {
+            chip_driver_lcd_write_data(color[i*width+j]);
+        }
+    } 
 }
 
 void device_itl9341_read_lcd_id(void)
 {
-	chip_driver_lcd_set_cmd(0xD3);
-	device_itl9341_msg.lcd_id = LCD_DATA;
-	device_itl9341_msg.lcd_id = LCD_DATA;
-	device_itl9341_msg.lcd_id = LCD_DATA;
-	device_itl9341_msg.lcd_id <<= 8;
-	device_itl9341_msg.lcd_id |= LCD_DATA;	
+	uint16_t tmp = 0;
+	chip_driver_lcd_write_cmd(0xD3);
+	tmp = chip_driver_lcd_read_data();
+	tmp = chip_driver_lcd_read_data();
+	tmp = chip_driver_lcd_read_data();
+	tmp <<= 8;
+	tmp |= chip_driver_lcd_read_data();
+	device_itl9341_msg.lcd_id = tmp;	
 }
 
 void device_itl9341_back_light_on(void)
@@ -168,11 +222,12 @@ void device_itl9341_fsmc_config(void)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	FSMC_NORSRAMInitTypeDef  FSMC_NORSRAMInitStructure;
-    FSMC_NORSRAMTimingInitTypeDef  readWriteTiming; 
+	FSMC_NORSRAMTimingInitTypeDef  readWriteTiming; 
 	FSMC_NORSRAMTimingInitTypeDef  writeTiming;
+
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD|RCC_AHB1Periph_GPIOE|RCC_AHB1Periph_GPIOF|RCC_AHB1Periph_GPIOG, ENABLE);
-    RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC,ENABLE);//使能FSMC时钟  
-	
+	RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC,ENABLE);//使能FSMC时钟  
+
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;        //PF10 推挽输出,控制背光
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;     //输出模式
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;    //推挽输出
@@ -339,6 +394,7 @@ void device_itl9341_init(void)
 		chip_driver_lcd_set_data(0x00);
 		chip_driver_lcd_set_data(0x00);
 		chip_driver_lcd_set_data(0x00); 
+		chip_driver_lcd_set_data(0x00);
 		chip_driver_lcd_set_cmd(0XE1);
 		chip_driver_lcd_set_data(0x00);
 		chip_driver_lcd_set_data(0x15);
@@ -372,8 +428,6 @@ void device_itl9341_init(void)
 		device_itl9341_back_light_on();
 	
 	}
-	device_itl9341_set_show_dir(VERTICAL_SCREEN);
+	device_itl9341_set_show_dir(L2R_U2D);
 	device_itl9341_show_clear(WHITE);
 }
-
-

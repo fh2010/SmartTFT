@@ -26,14 +26,21 @@ typedef struct
 {
 	uint16_t lcd_id;
 	DEVICE_ITL9341_DISPLAY_DIR dis_dir;
-	uint16_t lcd_width;
-	uint16_t lcd_height;
-	uint16_t lcd_brush_color;
-	uint16_t lcd_back_color;
+	uint16_t lcd_hor; //水平方向
+	uint16_t lcd_ver; //垂直方向
+	uint16_t scan_mode; // 扫描模式
+    uint16_t gram_cmd;  
+    uint16_t setx_cmd; 
+    uint16_t sety_cmd;  
 	
 }device_itl9341_msg_t;
 
-
+typedef struct
+{
+	uint16_t lcd_back_color;
+	uint16_t lcd_text_color;
+	
+}device_itl9341_color_msg_t;
 
 #define   DEVICE_ITL9341_DISPLAY_ON     0x29
 #define   DEVICE_ITL9341_DISPLAY_OFF    0x28
@@ -47,6 +54,9 @@ typedef struct
 
 
 extern void device_itl9341_init(void);
-
+extern void device_itl9341_drawpoint(uint16_t x_addr, uint16_t y_addr);
+extern void device_itl9341_fill_color(uint16_t sx_addr, uint16_t sy_addr,uint16_t ex_addr, uint16_t ey_addr,uint16_t *color);
+extern uint16_t device_itl9341_get_lcd_width(void);
+extern uint16_t device_itl9341_get_lcd_height(void);
 #endif
 

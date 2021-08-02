@@ -35,3 +35,4 @@
 .\output\chip_driver_lcd_1.o: .\chip\stm32f407_dk\lib\inc\stm32f4xx_dac.h
 .\output\chip_driver_lcd_1.o: .\chip\stm32f407_dk\lib\inc\stm32f4xx_dcmi.h
 .\output\chip_driver_lcd_1.o: .\chip\stm32f407_dk\lib\inc\stm32f4xx_fsmc.h
+.\output\chip_driver_lcd_1.o: .\chip\stm32f407_dk\driver\systick\chip_driver_systick.h
