@@ -305,8 +305,8 @@
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x10000000</StartAddress>
+                <Size>0x10000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
             <RvctStartVector></RvctStartVector>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,LV_CONF_INCLUDE_SIMPLE</Define>
               <Undefine></Undefine>
-              <IncludePath>.\chip\stm32f407_dk\base;.\chip\stm32f407_dk\lib\inc;.\chip\stm32f407_dk;.\external\segger-rtt;.\chip\stm32f407_dk\user;.\chip\stm32f407_dk\driver\lcd;.\chip\stm32f407_dk\driver\systick;.\config;.\device\ITL9341;.\external\lvgl;.\external\lvgl\src;.\component\GUI\config;.\external\lvgl-master\src\core;.\external\lvg\src\draw;.\external\lvgl\src\extra;.\external\lvgl\src\font;.\external\lvg\src\gpu;.\external\lvgl\src\lv_hal;.\external\lvgl\src\misc;.\external\lvgl\src\widgets;.\component\GUI\port;.\component\GUI\code\calendar</IncludePath>
+              <IncludePath>.\chip\stm32f407_dk\base;.\chip\stm32f407_dk\lib\inc;.\chip\stm32f407_dk;.\external\segger-rtt;.\chip\stm32f407_dk\user;.\chip\stm32f407_dk\driver\lcd;.\chip\stm32f407_dk\driver\systick;.\config;.\device\ITL9341;.\device\IS61LV51216;.\external\lvgl;.\external\lvgl\src;.\component\GUI\config;.\external\lvgl-master\src\core;.\external\lvg\src\draw;.\external\lvgl\src\extra;.\external\lvgl\src\font;.\external\lvg\src\gpu;.\external\lvgl\src\lv_hal;.\external\lvgl\src\misc;.\external\lvgl\src\widgets;.\component\GUI\port;.\component\GUI\code\calendar;.\component\GUI\code\arc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -397,6 +397,11 @@
               <FileName>lv_calendar_test.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\component\GUI\code\calendar\lv_calendar_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>lv_arc_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\component\GUI\code\arc\lv_arc_test.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1013,6 +1018,16 @@
               <FileName>device_lcd_mgr.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\device\ITL9341\device_lcd_mgr.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>device/SRAM</GroupName>
+          <Files>
+            <File>
+              <FileName>device_sram_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\device\IS61LV51216\device_sram_driver.c</FilePath>
             </File>
           </Files>
         </Group>

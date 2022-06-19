@@ -58,5 +58,7 @@ extern void device_itl9341_drawpoint(uint16_t x_addr, uint16_t y_addr);
 extern void device_itl9341_fill_color(uint16_t sx_addr, uint16_t sy_addr,uint16_t ex_addr, uint16_t ey_addr,uint16_t *color);
 extern uint16_t device_itl9341_get_lcd_width(void);
 extern uint16_t device_itl9341_get_lcd_height(void);
+extern uint16_t device_itl9341_get_lcd_hor_size(void);
+extern uint16_t device_itl9341_get_lcd_ver_size(void);
 #endif
 

@@ -1,6 +1,7 @@
 --cpu=Cortex-M4.fp.sp
 ".\output\main.o"
 ".\output\lv_calendar_test.o"
+".\output\lv_arc_test.o"
 ".\output\lv_disp.o"
 ".\output\lv_group.o"
 ".\output\lv_indev.o"
@@ -119,6 +120,7 @@
 ".\output\segger_rtt_printf.o"
 ".\output\device_itl9341_driver.o"
 ".\output\device_lcd_mgr.o"
+".\output\device_sram_driver.o"
 ".\output\stm32f4xx_it.o"
 ".\output\system_stm32f4xx.o"
 ".\output\startup_stm32f40_41xxx.o"

@@ -181,6 +181,7 @@
 #  define LV_FS_IF_PC       '\0'
 #endif  /*LV_USE_FS_IF*/
 
+#define LV_USE_EX_SRAM	1
 /*====================
    Graphical settings
  *====================*/

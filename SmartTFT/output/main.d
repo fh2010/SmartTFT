@@ -41,6 +41,7 @@
 .\output\main.o: .\chip\stm32f407_dk\lib\inc\stm32f4xx_dcmi.h
 .\output\main.o: .\chip\stm32f407_dk\lib\inc\stm32f4xx_fsmc.h
 .\output\main.o: .\config\lcd_config.h
+.\output\main.o: .\device\IS61LV51216\device_sram_driver.h
 .\output\main.o: .\chip\stm32f407_dk\driver\systick\chip_driver_systick.h
 .\output\main.o: .\external\lvgl\lvgl.h
 .\output\main.o: .\external\lvgl\src/lv_misc/lv_log.h

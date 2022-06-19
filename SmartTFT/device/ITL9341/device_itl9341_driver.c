@@ -36,6 +36,16 @@ void device_itl9341_set_lcd_textcolor(uint16_t textcolor)
 	device_itl9341_color_msg.lcd_text_color = textcolor;
 }
 
+uint16_t device_itl9341_get_lcd_hor_size(void)
+{
+	return device_itl9341_msg.lcd_hor;
+}
+
+uint16_t device_itl9341_get_lcd_ver_size(void)
+{
+	return device_itl9341_msg.lcd_ver;
+}
+
 void device_itl9341_display_onff(bool onoroff)
 {
 	if(onoroff)
@@ -119,14 +129,14 @@ void device_itl9341_set_show_dir(uint8_t sacn_dir)
 	device_itl9341_msg.dis_dir = (DEVICE_ITL9341_DISPLAY_DIR)tmp;
 	if(tmp == 0)
 	{
-		device_itl9341_msg.lcd_hor = LCD_HEIGHT;
-		device_itl9341_msg.lcd_ver = LCD_WIDHT;
+		device_itl9341_msg.lcd_hor = LCD_WIDHT;
+		device_itl9341_msg.lcd_ver = LCD_HEIGHT;
 		
 	}
 	else if(tmp == 1)
 	{
-		device_itl9341_msg.lcd_hor = LCD_WIDHT;
-		device_itl9341_msg.lcd_ver = LCD_HEIGHT;
+		device_itl9341_msg.lcd_hor = LCD_HEIGHT;
+		device_itl9341_msg.lcd_ver = LCD_WIDHT;
 	}
 	device_itl9341_set_scan_dir((DEVICE_ITL9341_SCAN_DIR)sacn_dir);
 }
@@ -428,6 +438,6 @@ void device_itl9341_init(void)
 		device_itl9341_back_light_on();
 	
 	}
-	device_itl9341_set_show_dir(L2R_U2D);
+	device_itl9341_set_show_dir(3);
 	device_itl9341_show_clear(WHITE);
 }
